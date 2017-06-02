@@ -19,7 +19,8 @@ defmodule Extatic.Exdown.ParserTest do
   end
 
   test "parses a paragraph of text including special characters" do
-    assert {[{:p, ["example text: , * _ ` <> ] [."], []}], []} == parse("example text: , * _ ` <> ] [.\n")
+    assert {[{:p, ["example text: , * _ ` <> ] [."], []}], []} ==
+      parse("example text: , * _ ` <> ] [.\n")
   end
 
   test "parses multiple paragraphs of text" do
@@ -38,7 +39,8 @@ defmodule Extatic.Exdown.ParserTest do
   end
 
   test "parses paragraph and h2" do
-    assert {[{:p, ["Hello, world"], []}, {:h2, ["Heading 2"], []}], []} == parse("Hello, world\n\n\nHeading 2\n---\n")
+    assert {[{:p, ["Hello, world"], []}, {:h2, ["Heading 2"], []}], []} ==
+      parse("Hello, world\n\n\nHeading 2\n---\n")
   end
 
   test "does not parse paragraph and h2 with a single blank line" do
@@ -50,7 +52,8 @@ defmodule Extatic.Exdown.ParserTest do
   end
 
   test "parses paragraph and h3" do
-    assert {[{:p, ["Hello, world"], []}, {:h3, ["Heading 3"], []}], []} == parse("Hello, world\n\n\nHeading 3\n...\n")
+    assert {[{:p, ["Hello, world"], []}, {:h3, ["Heading 3"], []}], []} ==
+      parse("Hello, world\n\n\nHeading 3\n...\n")
   end
 
   test "does not parse paragraph and h3 with a single blank line" do
@@ -58,39 +61,39 @@ defmodule Extatic.Exdown.ParserTest do
   end
 
   test "parses text with italics in a paragraph" do
-    assert {[{:p, ["example ", {:i, "text"}, "."], []}], []}== parse("example _text_.\n")
+    assert {[{:p, ["example ", {:i, "text"}, "."], []}], []} == parse("example _text_.\n")
   end
 
   test "parses text with italics at the end" do
-    assert {[{:p, ["example ", {:i, "text"}], []}], []}== parse("example _text_\n")
+    assert {[{:p, ["example ", {:i, "text"}], []}], []} == parse("example _text_\n")
   end
 
   test "parses text with italics at the start" do
-    assert {[{:p, [{:i, "example"}, " text"], []}], []}== parse("_example_ text\n")
+    assert {[{:p, [{:i, "example"}, " text"], []}], []} == parse("_example_ text\n")
   end
 
   test "parses text with emphases in a paragraph" do
-    assert {[{:p, ["example ", {:b, "text"}, "."], []}], []}== parse("example *text*.\n")
+    assert {[{:p, ["example ", {:b, "text"}, "."], []}], []} == parse("example *text*.\n")
   end
 
   test "parses text with emphasis at the end" do
-    assert {[{:p, ["example ", {:b, "text"}], []}], []}== parse("example *text*\n")
+    assert {[{:p, ["example ", {:b, "text"}], []}], []} == parse("example *text*\n")
   end
 
   test "parses text with emphasis at the start" do
-    assert {[{:p, [{:b, "example"}, " text"], []}], []}== parse("*example* text\n")
+    assert {[{:p, [{:b, "example"}, " text"], []}], []} == parse("*example* text\n")
   end
 
   test "parses text with code in a paragraph" do
-    assert {[{:p, ["example ", {:code, "text"}, "."], []}], []}== parse("example `text`.\n")
+    assert {[{:p, ["example ", {:code, "text"}, "."], []}], []} == parse("example `text`.\n")
   end
 
   test "parses text with code at the end" do
-    assert {[{:p, ["example ", {:code, "text"}], []}], []}== parse("example `text`\n")
+    assert {[{:p, ["example ", {:code, "text"}], []}], []} == parse("example `text`\n")
   end
 
   test "parses text with code at the start" do
-    assert {[{:p, [{:code, "example"}, " text"], []}], []}== parse("`example` text\n")
+    assert {[{:p, [{:code, "example"}, " text"], []}], []} == parse("`example` text\n")
   end
 
   test "parses links" do
@@ -102,11 +105,11 @@ defmodule Extatic.Exdown.ParserTest do
   end
 
   test "parses text with link at the end" do
-    assert {[{:p, ["example ", {:a, "text", "text"}], []}], []}== parse("example [[text]]\n")
+    assert {[{:p, ["example ", {:a, "text", "text"}], []}], []} == parse("example [[text]]\n")
   end
 
   test "parses text with link at the start" do
-    assert {[{:p, [{:a, "example", "example"}, " text"], []}], []}== parse("[[example]] text\n")
+    assert {[{:p, [{:a, "example", "example"}, " text"], []}], []} == parse("[[example]] text\n")
   end
 
   test "parses an unordered list" do

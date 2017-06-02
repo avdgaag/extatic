@@ -75,20 +75,28 @@ defmodule Extatic.Exdown.HtmlFormatter do
     end
   end
 
-
   defp attrs_from_classes([]), do: []
+
   defp attrs_from_classes(classes), do: [class: Enum.join(classes, " ")]
 
-  defp block_format([{name, content, classes} | rest]) when name in ~w(p h1 h2 h3 pre li)a do
-    tag(name, inline_format(content), attrs_from_classes(classes)) <> "\n" <> block_format(rest)
+  defp block_format([{name, content, classes} | rest])
+  when name in ~w(p h1 h2 h3 pre li)a do
+    tag(name,
+      inline_format(content),
+      attrs_from_classes(classes)) <> "\n" <> block_format(rest)
   end
 
-  defp block_format([{name, items, classes} | rest]) when name in ~w(ul ol)a do
-    tag(name, block_format(items), attrs_from_classes(classes)) <> "\n" <> block_format(rest)
+  defp block_format([{name, items, classes} | rest])
+  when name in ~w(ul ol)a do
+    tag(name,
+      block_format(items),
+      attrs_from_classes(classes)) <> "\n" <> block_format(rest)
   end
 
   defp block_format([{:blockquote, content, classes} | rest]) do
-    tag(:blockquote, tag(:p, inline_format(content)), attrs_from_classes(classes)) <> "\n" <> block_format(rest)
+    tag(:blockquote,
+      tag(:p, inline_format(content)),
+      attrs_from_classes(classes)) <> "\n" <> block_format(rest)
   end
 
   defp block_format([{:refs, _} | rest]) do
