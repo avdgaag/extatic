@@ -1,9 +1,11 @@
 defmodule Extatic.Exdown do
-  def parse(source) do
-    with {:ok, tokens, _} <- :exdown_lexer.string(to_charlist(source)),
-         {:ok, result} <- :exdown_parser.parse(tokens)
+  alias Extatic.Exdown.{Parser, HtmlFormatter}
+
+  def to_html(source) do
+    with {:ok, parsed} <- Parser.parse(source),
+         {:ok, html} <- HtmlFormatter.format(parsed)
     do
-      result
+      html
     end
   end
 end

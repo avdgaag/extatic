@@ -1,11 +1,14 @@
 Terminals
-',' '<' '>' ':' '|' '[' ']' '_' '*' '`' space char newline h1_underline h2_underline
-h3_underline uli oli indented title_marker.
+'.' ',' '<' '>' ':' '[' ']' '*' space char newline h1_underline h2_underline
+h3_underline uli oli indented title_marker italic bold code link property.
 
 Nonterminals
-document paragraph paragraph_contents italic inline_text bold code
-h1 h2 h3 block_element ul ul_item ul_items ol ol_items ol_item link pre refs
-ref inline_char document_contents title_section title author_email date author_name.
+document paragraph paragraph_contents inline_text
+h1 h2 h3 block_element ul ul_item ul_items ol ol_items ol_item pre refs
+ref inline_char document_contents title_section title author_email date
+author_name plain_text plain_text_char main_title_section properties
+single_property block_element_wrapper block_metadata class_name refs_content
+blockquote.
 
 Rootsymbol document.
 
@@ -14,13 +17,45 @@ Rootsymbol document.
 document ->
     title_section : {[], '$1'}.
 document ->
-    title_section document_contents : {'$2', '$1'}.
+    title_section newline document_contents : {'$3', '$1'}.
 document ->
     document_contents : {'$1', []}.
 document_contents ->
-    block_element newline document_contents : ['$1' | '$3'].
+    block_element_wrapper newline document_contents : ['$1' | '$3'].
 document_contents ->
-    block_element : ['$1'].
+    newline refs : ['$2'].
+document_contents ->
+    block_element_wrapper : ['$1'].
+
+% Link refs
+% ---------
+refs ->
+    refs_content : {refs, '$1'}.
+refs_content ->
+    ref refs_content : ['$1' | '$2'].
+refs_content ->
+    ref : ['$1'].
+ref ->
+    '[' plain_text ']' ':' space plain_text newline : {ref, '$2', '$6'}.
+
+% Block element wrappers with metadata
+% ------------------------------------
+block_element_wrapper ->
+    block_metadata newline block_element : add_metadata('$3', '$1').
+block_metadata ->
+    '.' class_name block_metadata : ['$2' | '$3'].
+block_metadata ->
+    '.' class_name ':' : ['$2'].
+class_name ->
+    char class_name : concat(extract_string('$1'), '$2').
+class_name ->
+    char : extract_string('$1').
+block_element_wrapper ->
+    block_element : add_metadata('$1', []).
+
+
+% Block elements
+% --------------
 block_element ->
     h1 : '$1'.
 block_element ->
@@ -34,22 +69,40 @@ block_element ->
 block_element ->
     pre : '$1'.
 block_element ->
-    paragraph : '$1'.
+    blockquote : '$1'.
 block_element ->
-    refs : '$1'.
+    paragraph : '$1'.
+
+% Blockquotes
+% -----------
+blockquote ->
+    '>' space paragraph_contents newline : {blockquote, '$3'}.
 
 % Title section
 % -------------
 title_section ->
+    main_title_section properties : lists:append('$1', [{props, '$2'}]).
+title_section ->
+    main_title_section : '$1'.
+main_title_section ->
     title author_name author_email date newline : [{title, '$1'}, {author_name, '$2'}, {author_email, '$3'}, {date, '$4'}].
 title ->
     title_marker inline_text newline : '$2'.
 author_name ->
-    inline_text : binary:list_to_bin(string:strip(binary:bin_to_list('$1'))).
+    plain_text : binary:list_to_bin(string:strip(binary:bin_to_list('$1'))).
 author_email ->
-    '<' inline_text '>' : '$2'.
+    '<' plain_text '>' : '$2'.
 date ->
     ',' space inline_text : parse_datetime('$3').
+
+% Property list
+% -------------
+properties ->
+    single_property properties : ['$1' | '$2'].
+properties ->
+    single_property : ['$1'].
+single_property ->
+    property inline_text newline : {extract_value('$1'), '$2'}.
 
 % Headings
 % --------
@@ -69,7 +122,7 @@ ul_items ->
 ul_items ->
     ul_item : ['$1'].
 ul_item ->
-    uli paragraph_contents newline : {li, '$2'}.
+    uli paragraph_contents newline : {li, '$2', []}.
 
 % Ordered lists
 % ---------------
@@ -80,7 +133,7 @@ ol_items ->
 ol_items ->
     ol_item : ['$1'].
 ol_item ->
-    oli paragraph_contents newline : {li, '$2'}.
+    oli paragraph_contents newline : {li, '$2', []}.
 
 % Paragraphs
 % ---------------
@@ -89,50 +142,28 @@ paragraph ->
 paragraph_contents ->
     inline_text paragraph_contents : ['$1' | '$2'].
 paragraph_contents ->
-    italic paragraph_contents : ['$1' | '$2'].
+    italic paragraph_contents : [{i, extract_value('$1')} | '$2'].
 paragraph_contents ->
-    italic : ['$1'].
+    italic : [{i, extract_value('$1')}].
 paragraph_contents ->
-    link paragraph_contents : ['$1' | '$2'].
+    link paragraph_contents : [link_from_token('$1') | '$2'].
 paragraph_contents ->
-    link : ['$1'].
+    link : [link_from_token('$1')].
 paragraph_contents ->
-    code paragraph_contents : ['$1' | '$2'].
+    code paragraph_contents : [{code, extract_value('$1')} | '$2'].
 paragraph_contents ->
-    code : ['$1'].
+    code : [{code, extract_value('$1')}].
 paragraph_contents ->
-    bold paragraph_contents : ['$1' | '$2'].
+    bold paragraph_contents : [{b, extract_value('$1')} | '$2'].
 paragraph_contents ->
-    bold : ['$1'].
+    bold : [{b, extract_value('$1')}].
 paragraph_contents ->
     inline_text : ['$1'].
 
 % Indented code blocks
 % --------------------
 pre ->
-    indented : {pre, list_to_binary(extract_value('$1'))}.
-
-% Inline formatting
-% --------------
-italic ->
-    '_' inline_text '_' : {i, '$2'}.
-bold ->
-    '*' inline_text '*' : {b, '$2'}.
-code ->
-    '`' inline_text '`' : {code, '$2'}.
-link ->
-    '[' '[' inline_text '|' inline_text ']' ']' : {a, '$3', '$5'}.
-link ->
-    '[' '[' inline_text ']' ']' : {a, '$3', '$3'}.
-
-% Link refs
-% ---------
-refs ->
-    ref refs : ['$1' | '$2'].
-refs ->
-    ref : ['$1'].
-ref ->
-    '[' inline_text ']' ':' space inline_text newline : {ref, '$2', '$6'}.
+    indented : {pre, [list_to_binary(extract_value('$1'))]}.
 
 % Inline text without formatting
 % ------------------------------
@@ -147,7 +178,33 @@ inline_char ->
 inline_char ->
     ':' : binary:list_to_bin(":").
 inline_char ->
+    '*' : binary:list_to_bin("*").
+inline_char ->
+    '>' : binary:list_to_bin(">").
+inline_char ->
+    '<' : binary:list_to_bin("<").
+inline_char ->
+    '[' : binary:list_to_bin("[").
+inline_char ->
+    ']' : binary:list_to_bin("]").
+inline_char ->
+    '.' : binary:list_to_bin(".").
+inline_char ->
     char : extract_string('$1').
+
+plain_text ->
+    plain_text_char plain_text : concat('$1', '$2').
+plain_text ->
+    plain_text_char : '$1'.
+plain_text_char ->
+    space : binary:list_to_bin(" ").
+plain_text_char ->
+    '.' : binary:list_to_bin(".").
+plain_text_char ->
+    ':' : binary:list_to_bin(":").
+plain_text_char ->
+    char : extract_string('$1').
+
 
 Erlang code.
 
@@ -155,7 +212,7 @@ extract_value({_, _, Value}) ->
     Value.
 
 extract_string(Token) ->
-    list_to_binary(extract_value(Token)).
+    unicode:characters_to_binary(extract_value(Token)).
 
 concat(A, B) ->
     <<A/binary, B/binary>>.
@@ -168,3 +225,9 @@ parse_integers([]) ->
 
 parse_datetime(Chars) ->
     list_to_tuple(parse_integers(string:tokens(binary:bin_to_list(Chars), "- :"))).
+
+link_from_token({_, _, {Text, Ref}}) ->
+    {a, Text, Ref}.
+
+add_metadata({A, B}, Metadata) ->
+    {A, B, Metadata}.

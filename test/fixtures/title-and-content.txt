@@ -1,0 +1,11 @@
+::: Document title
+John Example <john@example.com>, 2016-03-21 12:00
+:tags: foo, bar
+
+Intro
+
+
+Heading 2
+---------
+
+More content
