@@ -1,4 +1,5 @@
 defmodule Extatic.Exdown.HtmlFormatter do
+  @spec format(Extatic.Exdown.Parser.document) :: {:ok, String.t}
   def format({elements, doc}) do
     html = elements
     |> resolve_references
