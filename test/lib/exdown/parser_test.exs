@@ -2,6 +2,7 @@ defmodule Extatic.Exdown.ParserTest do
   use ExUnit.Case, async: true
 
   alias Extatic.Exdown.Parser
+  doctest Parser
 
   def parse(input) do
     with {:ok, output} <- Parser.parse(input) do

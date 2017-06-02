@@ -1,18 +1,9 @@
 defmodule Extatic do
   @moduledoc """
-  Documentation for Extatic.
+  Extatic is a a static site generator that transform a collection of plain text
+  files into a a website. This is very much a hobby project for my own personal
+  blog.
+
+  Currently, the only part that's implemented is `Extatic.Exdown`.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Extatic.hello
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end

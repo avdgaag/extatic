@@ -1,4 +1,18 @@
 defmodule Extatic.Exdown.HtmlFormatter do
+  @moduledoc """
+  Transform parsed Exdown documents into an HTML file.
+  """
+
+  @doc """
+  Transform a parsed Exdown document into an HTML fragment or
+  entire page.
+
+  ### Examples
+
+      iex> HtmlFormatter.format({[{:p, ["Hello, world"], []}], []})
+      {:ok, "<p>Hello, world</p>\\n"}
+
+  """
   @spec format(Extatic.Exdown.Parser.document) :: {:ok, String.t}
   def format({elements, doc}) do
     html = elements

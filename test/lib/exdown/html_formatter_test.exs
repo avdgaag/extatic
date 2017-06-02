@@ -2,6 +2,7 @@ defmodule Extatic.Exdown.HtmlFormatterTest do
   use ExUnit.Case, async: true
 
   alias Extatic.Exdown.HtmlFormatter
+  doctest HtmlFormatter
 
   def to_html(input) do
     with {:ok, output} <- HtmlFormatter.format(input) do

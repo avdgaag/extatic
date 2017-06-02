@@ -7,7 +7,12 @@ defmodule Extatic.Mixfile do
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     name: "Extatic",
+     source_url: "https://github.com/avdgaag/extatic",
+     homepage_url: "http://avdgaag.github.com/extatic",
+     docs: [main: "Extatic",
+            extras: ["README.md"]]]
   end
 
   # Configuration for the OTP application
@@ -28,6 +33,7 @@ defmodule Extatic.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:dialyxir, "~> 0.5", only: [:dev], runtime: false}]
+    [{:ex_doc, "~> 0.14", only: :dev, runtime: false},
+     {:dialyxir, "~> 0.5", only: [:dev], runtime: false}]
   end
 end

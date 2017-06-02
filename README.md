@@ -1,18 +1,13 @@
 # Extatic
 
-**TODO: Add description**
+A static site generator that transforms plain text input files into a
+functioning website. Intended to be used for my own blog as a replacement for a
+collection of Ruby scripts implemented as Rake tasks.
 
-## Installation
+Currently, the only part that's implemented is `Extatic.Exdown`, the
+Markdown/AsciiDoc-like plain text markup language that can be transformed to
+HTML.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `extatic` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [{:extatic, "~> 0.1.0"}]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/extatic](https://hexdocs.pm/extatic).
+Documentation can be generated
+with [ExDoc](https://github.com/elixir-lang/ex_doc) and can be found online
+at [http://avdgaag.github.com/extatic](http://avdgaag.github.com/extatic).
