@@ -13,6 +13,7 @@ defmodule Extatic.Mixfile do
      source_url: "https://github.com/avdgaag/extatic",
      homepage_url: "http://avdgaag.github.com/extatic",
      docs: [main: "Extatic",
+            output: "docs",
             extras: ["README.md"]]]
   end
 
