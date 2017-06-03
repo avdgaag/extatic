@@ -1,4 +1,4 @@
-# Extatic [![Build Status](https://travis-ci.org/avdgaag/extatic.svg?branch=master)](https://travis-ci.org/avdgaag/extatic)
+# Extatic [![Build Status](https://travis-ci.org/avdgaag/extatic.svg?branch=master)](https://travis-ci.org/avdgaag/extatic) [![Inline docs](http://inch-ci.org/github/avdgaag/extatic.svg)](http://inch-ci.org/github/avdgaag/extatic)
 
 A static site generator that transforms plain text input files into a
 functioning website. Intended to be used for my own blog as a replacement for a

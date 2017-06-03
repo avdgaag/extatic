@@ -38,6 +38,7 @@ defmodule Extatic.Mixfile do
     [{:ex_doc, "~> 0.14", only: :dev, runtime: false},
      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
      {:dogma, "~> 0.1", only: :dev, runtime: false},
-     {:credo, "~> 0.8", only: [:dev, :test], runtime: false}]
+     {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+     {:inch_ex, only: :docs}]
   end
 end
